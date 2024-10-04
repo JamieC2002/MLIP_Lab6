@@ -5,8 +5,9 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''#!/bin/bash
-                sudo conda create -n mlip python pytest numpy pandas scikit-learn -c conda-forge
-                sudo conda activate mlip
+                sudo python -m venv env
+                sudo source env/bin/activate
+                sudo pip install pytest numpy pandas scikit-learn
                 '''
             }
         }
@@ -14,12 +15,7 @@ pipeline {
             steps {
                 sh '''#!/bin/bash
                 echo 'Test Step: We run testing tool like pytest here'
-
-                # Activate the environment and run pytest
-                sudo conda run -n mlip pytest
-                pytest --maxfail=1 --disable-warnings || { echo "Pytest failed"; exit 1; }
-
-                echo 'pytest completed successfully'
+                pytest
                 '''
             }
         }
